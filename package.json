@@ -1,0 +1,34 @@
+{
+  "name": "weblinksocket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/c3po-shard/weblinksocket.git"
+  },
+  "author": "scuba",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/c3po-shard/weblinksocket/issues"
+  },
+  "homepage": "https://gitlab.com/c3po-shard/weblinksocket#readme",
+  "dependencies": {
+    "app-module-path": "^2.2.0",
+    "crypto-js": "^4.1.1",
+    "dbwrapper": "file:src/modules/dbwrapper",
+    "discordmsg": "file:src/modules/discordmsg",
+    "express": "^4.17.2",
+    "google-auth-library": "^7.11.0",
+    "got": "^11.8.2",
+    "mongodb": "^4.3.0",
+    "node-fetch": "^2.6.7",
+    "socket.io": "^4.5.4",
+    "stub": "file:src/modules/stub",
+    "swgohhelper": "file:src/modules/swgohhelper",
+    "uuid": "^8.3.2"
+  }
+}
