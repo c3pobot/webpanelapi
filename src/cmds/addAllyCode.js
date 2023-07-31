@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 module.exports = async(obj = {}, discordId)=>{
   try{
     let dObj, res = {msg: {openAlert: true, type: 'error', msg: 'You did not provide an allyCode'}}, usr, allyCode, pObj, exists
@@ -66,7 +67,7 @@ module.exports = async(obj = {}, discordId)=>{
     }
     return res
   }catch(e){
-    console.error(e)
+    log.error(e)
     return {msg: {openAlert: true, type: 'error', msg: 'Error adding allyCode'}}
   }
 }

@@ -1,5 +1,7 @@
 'use strict'
+const log = require('logger')
 const CryptoJS = require('crypto-js')
-module.exports = async(encrypted_id)=>{
-  return await (CryptoJS.AES.decrypt(encrypted_id, process.env.DISCORD_CLIENT_SECRET)).toString(CryptoJS.enc.Utf8)
+module.exports = (encrypted_id)=>{
+  if(!encrypted_id) return
+  return CryptoJS.AES.decrypt(encrypted_id, process.env.DISCORD_CLIENT_SECRET).toString(CryptoJS.enc.Utf8)
 }

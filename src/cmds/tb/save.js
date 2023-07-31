@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 module.exports = async(obj={}, dId)=>{
   try{
     if(obj.guildId && obj.collection?.startsWith('tb') && obj.data > 0 && obj.allyCode, obj.tbId){
@@ -15,6 +16,6 @@ module.exports = async(obj={}, dId)=>{
       }
     }
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }

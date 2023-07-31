@@ -1,5 +1,6 @@
 'use strict'
-const fetch = require('node-fetch')
+const log = require('logger')
+const fetch = ('node-fetch')
 const baseStoreUrl = 'https://store.galaxy-of-heroes.starwars.ea.com'
 
 const defaultBody = { credentials: 'same-origin' }
@@ -16,7 +17,7 @@ const checkCookie = (cookie)=>{
     }
     return res
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }
 module.exports = async(path, payload = {}, headers = {})=>{
@@ -25,29 +26,28 @@ module.exports = async(path, payload = {}, headers = {})=>{
     if(headers) reqHeaders = {...reqHeaders,...headers}
     let reqBody = JSON.parse(JSON.stringify(defaultBody))
     if(payload) reqBody = {...reqBody,...payload}
-    console.log(reqHeaders)
-    console.log(reqBody)
-    const obj = await fetch(baseStoreUrl+path, {
+
+    let obj = await fetch(baseStoreUrl+path, {
       method: 'POST',
       timeout: 60000,
       compress: true,
       headers: reqHeaders,
       body: JSON.stringify(reqBody)
     })
-    const cookies = obj?.headers?.raw()['set-cookie']
-    const resHeader = obj?.headers.get('content-type')
+    let cookies = obj?.headers?.raw()['set-cookie']
+    let resHeader = obj?.headers.get('content-type')
     if(resHeader?.includes('application/json')){
       let res = await obj?.json()
       if(!res) res = {}
       if(cookies?.length > 0){
         for(let i in cookies){
-          let tempRes = await checkCookie(cookies[i])
+          let tempRes = checkCookie(cookies[i])
           if(tempRes) res = {...res, ...tempRes}
         }
       }
       return res
     }
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }

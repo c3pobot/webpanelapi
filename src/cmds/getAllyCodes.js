@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 module.exports = async(obj = {}, discordId)=>{
   try{
     let res = []
@@ -9,7 +10,7 @@ module.exports = async(obj = {}, discordId)=>{
     }
     return res
   }catch(e){
-    console.error(e);
+    log.error(e);
     return []
   }
 }

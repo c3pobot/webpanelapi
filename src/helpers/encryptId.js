@@ -1,5 +1,6 @@
 'use strict'
 const CryptoJS = require('crypto-js')
-module.exports = async(discordId)=>{
-  return await (CryptoJS.AES.encrypt(discordId, process.env.DISCORD_CLIENT_SECRET)).toString()
+module.exports = (discordId)=>{
+  if(!discordId) return
+  return CryptoJS.AES.encrypt(discordId, process.env.DISCORD_CLIENT_SECRET).toString()
 }

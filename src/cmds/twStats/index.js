@@ -1,10 +1,11 @@
 'use strict'
+const log = require('logger')
 const GetGuildId = require('./getGuildId')
 module.exports = async(obj = {}, dId)=>{
   try{
     let guildId = obj.guildId, allyCode, twData
     if(!guildId){
-      const dObj = (await mongo.find('discordId', {_id: dId}))[0]
+      let dObj = (await mongo.find('discordId', {_id: dId}))[0]
       if(dObj?.allyCodes?.length > 0) allyCode = dObj.allyCodes[0]?.allyCode
       if(allyCode) guildId = await GetGuildId(allyCode)
     }
@@ -21,6 +22,6 @@ module.exports = async(obj = {}, dId)=>{
       return {data: twData}
     }
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }

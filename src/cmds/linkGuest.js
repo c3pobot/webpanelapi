@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const CryptoJS = require('crypto-js')
 const { v5: uuidv5 } = require('uuid')
 const GenerateUid = async(deviceId)=>{
@@ -59,7 +60,7 @@ module.exports = async(obj = {}, discordId)=>{
     }
     return res
   }catch(e){
-    console.error(e)
+    log.error(e)
     return({status: 'errorOccured'})
   }
 }

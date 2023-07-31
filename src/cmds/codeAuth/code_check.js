@@ -1,11 +1,12 @@
 'use strict'
+const log = require('logger')
 const { v5: uuidv5 } = require('uuid')
 const postRequest = require('./request')
 const CreateUUid = async(authId)=>{
   try{
     return await uuidv5(authId, uuidv5.URL)
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }
 module.exports = async(obj = {}, dId)=>{
@@ -58,6 +59,6 @@ module.exports = async(obj = {}, dId)=>{
     }
     return res
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }

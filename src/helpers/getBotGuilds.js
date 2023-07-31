@@ -1,13 +1,11 @@
 'use strict'
+const log = require('logger')
+const botRequest = require('botrequest')
 module.exports = async()=>{
   try{
-    let res = []
-    const guilds = await BotSocket.call('botInfo', {shard: 'all'}, 'botGuilds')
-    if(guilds && guilds.length > 0){
-      for(let i in guilds) res = res.concat(guilds[i])
-    }
+    let res = await botRequest('botGuilds', {podName: 'all'})
     return res
   }catch(e){
-    console.log(e)
+    log.info(e)
   }
 }

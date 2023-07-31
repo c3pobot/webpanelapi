@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 module.exports = async(allyCode)=>{
   try{
     let pObj = (await mongo.find('playerCache', {allyCode: allyCode}, {guildId: 1}))[0]
@@ -7,6 +8,6 @@ module.exports = async(allyCode)=>{
     }
     return pObj?.guildId
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }

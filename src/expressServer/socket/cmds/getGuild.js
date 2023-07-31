@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const QueryGuild = async(guildId)=>{
   try{
     let guild = (await mongo.find('guildCache', {_id: guildId}))[0]
@@ -14,7 +15,7 @@ const QueryGuild = async(guildId)=>{
     if(guild.member) guild.member = guild.member.filter(x=>x.memberLevel !== 1)
     return guild
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }
 
@@ -24,6 +25,6 @@ module.exports = async(socket, data = {}, dId)=>{
     if(data?.guildId) guild = await QueryGuild(data.guildId)
     if(guild?.member?.length > 0) socket.emit('guild', guild)
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }

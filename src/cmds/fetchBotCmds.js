@@ -1,5 +1,5 @@
 'use strict'
-const sorter = require('json-array-sorter')
+const log = require('logger')
 module.exports = async()=>{
   try{
     let res = []
@@ -7,7 +7,7 @@ module.exports = async()=>{
     if(cmds?.length > 0) res = cmds
     return res
   }catch(e){
-    console.error(e)
+    log.error(e)
     return []
   }
 }

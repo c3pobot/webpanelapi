@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 module.exports = async(obj = {}, discordId)=>{
   try{
     let dObj, res = {status: 'errorOccured'}, tokens, pObj, authObj, identity
@@ -40,7 +41,7 @@ module.exports = async(obj = {}, discordId)=>{
     }
     return res
   }catch(e){
-    console.error(e)
+    log.error(e)
     return({status: 'errorOccured'})
   }
 }

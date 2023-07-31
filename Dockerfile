@@ -1,8 +1,20 @@
-FROM node:14-alpine
-RUN mkdir -p /home/node/app/cache; mkdir -p /home/node/app/data; mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
-WORKDIR /home/node/app
+FROM node:20-alpine AS builder
 COPY package*.json ./
+# don't install dev dependencies for the docker image
+RUN npm install --omit=dev
+
+FROM node:20-alpine AS app
+WORKDIR /app
+ENV NODE_PATH=/app
+COPY --from=builder node_modules node_modules/
+COPY . .
+
+RUN apk update && \
+  # wrap process in --init in order to handle kernel signals
+  # https://github.com/krallin/tini#using-tini
+  apk add --no-cache tini && \
+  rm -rf /var/cache/apk/*
+
 USER node
-RUN npm install
-COPY --chown=node:node . .
-CMD node index.js
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD [ "node", "index.js" ]

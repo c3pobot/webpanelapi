@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 module.exports = async(obj = {}, discordId)=>{
   try{
     let allyCode, dObj, res = {msg: {openAlert: true, type: 'error', msg: 'Error removing allyCode'}}, allyObj
@@ -20,7 +21,7 @@ module.exports = async(obj = {}, discordId)=>{
     }
     return res
   }catch(e){
-    console.error(e)
+    log.error(e)
     return {msg: {openAlert: true, type: 'error', msg: 'Error removing allyCode'}}
   }
 }

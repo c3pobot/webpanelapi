@@ -1,9 +1,9 @@
 'use strict'
+const log = require('logger')
 const postRequest = require('./request')
 module.exports = async(obj={}, dId)=>{
   try{
     let tempObj = { status: 'error'}
-    console.log(obj)
     if(obj?.payload?.email && obj.allyCode){
       const res = await postRequest('/auth/request_otc', obj.payload, {})
       if(res?.authId && res.authToken){
@@ -16,6 +16,6 @@ module.exports = async(obj={}, dId)=>{
     }
     return tempObj
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }

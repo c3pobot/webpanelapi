@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 module.exports = async(roster)=>{
   try{
     let returnUnit, tempRoster
@@ -11,6 +12,6 @@ module.exports = async(roster)=>{
     }
     return returnUnit
   }catch(e){
-    console.log(e)
+    log.error(e)
   }
 }

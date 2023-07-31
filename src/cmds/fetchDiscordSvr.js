@@ -1,5 +1,5 @@
 'use strict'
-
+const log = require('logger')
 module.exports = async(obj = {}, discordId)=>{
   try{
     let dObj, res = {status: {openAlert: true, type:'error', msg: 'Error getting data from the bot'}}, updateAllowed = 1
@@ -68,7 +68,7 @@ module.exports = async(obj = {}, discordId)=>{
     }
     return res
   }catch(e){
-    console.error(e)
+    log.error(e)
     return {status: {openAlert: true, type:'error', msg: 'Error getting data from the bot'}}
   }
 }

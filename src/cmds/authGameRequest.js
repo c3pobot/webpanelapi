@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 module.exports = async(obj ={}, dId)=>{
   try{
     let dObj, res = {alert: {type: 'error', msg: 'Your session expired'}}, identity, pObj, sessionId, data, sObj
@@ -9,18 +10,18 @@ module.exports = async(obj ={}, dId)=>{
       if(sObj?.identity) identity = sObj.identity
       if(sObj?.data) pObj = sObj.data
     }
-    console.log(pObj?.player?.allyCode)
-    console.log(obj.allyCode)
+    log.info(pObj?.player?.allyCode)
+    log.info(obj.allyCode)
     if(pObj?.player?.allyCode?.toString() === obj.allyCode.toString() && identity?.auth?.authToken){
       data = await Client.post(obj.method, obj.payload, identity)
-      console.log(data)
+      log.info(data)
     }
-    if(data && data.code !== 5){
+    if(data && data?.code !== 5){
       res.sessionId = obj.sessionId
       //await redis.setTTL(sessionId, {id: sessionId, identity: identity, update: +sObj?.timeNow, data: pObj}, 43200)
     }
     return res
   }catch(e){
-    console.error(e)
+    log.error(e)
   }
 }

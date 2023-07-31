@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const CheckGuildAdmin = async(obj = {}, dId)=>{
   try{
     let guild, server, usr, auth = 0
@@ -12,7 +13,7 @@ const CheckGuildAdmin = async(obj = {}, dId)=>{
     if(server?.admin?.some(x=> usr?.roles.includes(x.id))) auth++;
     return auth
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }
 const CheckServerAdmin = async(obj = {}, dId)=>{
@@ -27,7 +28,7 @@ const CheckServerAdmin = async(obj = {}, dId)=>{
     if(server?.admin?.some(x=> usr?.roles?.includes(x.id))) auth++;
     return auth
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }
 const CheckGlobalAdmin = async(obj = {}, dId)=>{
@@ -36,7 +37,7 @@ const CheckGlobalAdmin = async(obj = {}, dId)=>{
     if(dId === process.env.BOT_OWNER_ID) auth++;
     return auth
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }
 const CheckAdmin = async(obj = {}, dId)=>{
@@ -73,7 +74,7 @@ module.exports = async(obj = {}, dId)=>{
     }
     return res
   }catch(e){
-    console.error(e)
+    log.error(e)
     return ({msg: {type:'error', msg: 'Error occured'}})
   }
 }

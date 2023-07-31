@@ -1,8 +1,9 @@
 'use strict'
+const log = require('logger')
 module.exports = async(playerId, roster)=>{
   try{
     let auth = 0
-    const vObj = (await mongo.find('acVerify', {_id: playerId}))[0]
+    let vObj = (await mongo.find('acVerify', {_id: playerId}))[0]
     if(vObj){
       const uObj = roster.find(x=>x.definitionId == vObj.defId)
       if(uObj){
@@ -19,6 +20,6 @@ module.exports = async(playerId, roster)=>{
     }
     return auth
   }catch(e){
-    console.log(e)
+    log.error(e)
   }
 }

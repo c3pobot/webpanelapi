@@ -1,4 +1,5 @@
 'use strict'
+const log = require('logger')
 const { v4: uuidv4 } = require('uuid')
 module.exports = async(obj={}, dId)=>{
   try{
@@ -19,6 +20,6 @@ module.exports = async(obj={}, dId)=>{
     }
     return res
   }catch(e){
-    console.error(e);
+    log.error(e);
   }
 }
