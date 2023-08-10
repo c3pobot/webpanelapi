@@ -1,5 +1,8 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
+const { CleanAllyCodes } = require('helpers')
+
 module.exports = async(obj = {}, discordId)=>{
   try{
     let allyCode, dObj, res = {msg: {openAlert: true, type: 'error', msg: 'Error removing allyCode'}}, allyObj
@@ -14,7 +17,7 @@ module.exports = async(obj = {}, discordId)=>{
       if(allyObj.type == 'facebook') mongo.del('facebook', {_id: allyObj.uId})
       if(allyObj.uId) mongo.del('identity', {_id: allyObj.uId})
       await mongo.pull('discordId', {_id: discordId}, {allyCodes: {allyCode: allyCode}})
-      await HP.CleanAllyCodes(dObj.allyCodes)
+      await CleanAllyCodes(dObj.allyCodes)
       res.allyCodes = dObj.allyCodes.filter(x=>x.allyCode.toString() !== allyCode.toString())
       res.msg.type = 'success'
       res.msg.msg = allyCode+' was unlinked from your discordId'

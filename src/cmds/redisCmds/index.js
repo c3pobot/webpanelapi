@@ -1,5 +1,7 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
+
 const Cmds = {}
 Cmds.get = require('./get')
 module.exports = async(obj = {}, discordId)=>{

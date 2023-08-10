@@ -1,5 +1,6 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
 module.exports = async(playerId, roster)=>{
   try{
     let auth = 0

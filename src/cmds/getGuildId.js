@@ -1,10 +1,13 @@
 'use strict'
 const log = require('logger')
+const swgohClient = require('swgohClient')
+
 module.exports = async(obj = {}, dId)=>{
   try{
     if(obj.allyCode){
-      const guildId = await Client.post('getGuildId', {id: +obj.allyCode})
-      if(guildId) return {guildId: guildId}
+      let pObj = await swgohClient('player', {allyCode: obj.allyCode?.toString()})
+      if(pObj?.guildId) return { guildId: pObj.guildId}
+
     }
   }catch(e){
     log.error(e);

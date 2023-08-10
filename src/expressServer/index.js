@@ -6,14 +6,17 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
-const Cmds = require('src/cmds')
 const S3_PUBLIC_URL = process.env.S3_PUBLIC_URL
 const PORT = process.env.PORT || 3000
+const Cmds = require('../cmds')
+
+const { DecryptId } = require('helpers')
 
 const app = express()
 let imgProxy
+
 if(S3_PUBLIC_URL) imgProxy = createProxyMiddleware({
-  target: path.join(S3_PUBLIC_URL, 'thumbnail'),
+  target: S3_PUBLIC_URL,
   secure: false
 })
 app.use(bodyParser.json({
@@ -23,17 +26,10 @@ app.use(bodyParser.json({
   }
 }))
 app.use(compression())
-
 if(imgProxy) app.use('/thumbnail', imgProxy)
-
 app.use(express.json({limit: '100MB'}))
 app.use(express.static(path.join(__dirname, 'webapp')));
-/*
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
-});
-*/
+
 app.get('/healthz', (req, res)=>{
   res.json({status: 'health check success'}).status(200)
 })
@@ -54,7 +50,7 @@ const handelRequest = async(req, res)=>{
   try{
     let data, response = { message: 'No method provided' }, status = 400
     if(req?.body?.data) data = req.body.data
-    let discordId = HP.DecryptId(req?.body?.dId)
+    let discordId = DecryptId(req?.body?.dId)
     if(req?.body?.method){
       response = {message: 'Unknown Coomand : '+req.body.method}
       if(Cmds[req.body.method]){

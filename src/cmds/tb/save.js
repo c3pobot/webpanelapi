@@ -1,9 +1,12 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
+const swgohClient = require('swgohClient')
+const { GetGuildMemberLevel } = require('helpers')
 module.exports = async(obj={}, dId)=>{
   try{
     if(obj.guildId && obj.collection?.startsWith('tb') && obj.data > 0 && obj.allyCode, obj.tbId){
-      let memberLevel = await Client.post('getGuildMemberLevel', {allyCode: obj.allyCode})
+      let memberLevel = await GetGuildMemberLevel({allyCode: obj.allyCode})
       if(memberLevel?.level > 2){
         const dObj = (await mongo.find('discordId', {_id: dId}))[0]
         if(dObj?.allyCodes.filter(x=>x.allyCode === +obj.allyCode).length > 0){

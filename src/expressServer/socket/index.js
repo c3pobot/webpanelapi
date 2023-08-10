@@ -1,7 +1,9 @@
 'use strict'
 const log = require('logger')
 const { Server } = require('socket.io')
+
 const Cmds = require('./cmds')
+const { DecryptId } = require('helpers')
 
 module.exports = async(server)=>{
   try{
@@ -16,7 +18,7 @@ module.exports = async(server)=>{
       socket.on('cmd', async(cmd, data = {})=>{
         try{
           if(!data.discordId) return
-          let dId = await HP.DecryptId(data.discordId)
+          let dId = DecryptId(data.discordId)
           if(!dId) return
           if(Cmds[cmd]) Cmds[cmd](socket, data, dId)
         }catch(e){

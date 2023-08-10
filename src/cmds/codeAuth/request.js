@@ -1,6 +1,6 @@
 'use strict'
-const log = require('logger')
 const fetch = ('node-fetch')
+const path = require('path')
 const baseStoreUrl = 'https://store.galaxy-of-heroes.starwars.ea.com'
 
 const defaultBody = { credentials: 'same-origin' }
@@ -17,17 +17,17 @@ const checkCookie = (cookie)=>{
     }
     return res
   }catch(e){
-    log.error(e);
+    throw(e);
   }
 }
-module.exports = async(path, payload = {}, headers = {})=>{
+module.exports = async(uri, payload = {}, headers = {})=>{
   try{
     let reqHeaders = JSON.parse(JSON.stringify(defaultHeaders))
     if(headers) reqHeaders = {...reqHeaders,...headers}
     let reqBody = JSON.parse(JSON.stringify(defaultBody))
     if(payload) reqBody = {...reqBody,...payload}
 
-    let obj = await fetch(baseStoreUrl+path, {
+    let obj = await fetch(path.join(baseStoreUrl, uri), {
       method: 'POST',
       timeout: 60000,
       compress: true,
@@ -48,6 +48,6 @@ module.exports = async(path, payload = {}, headers = {})=>{
       return res
     }
   }catch(e){
-    log.error(e);
+    throw(e);
   }
 }

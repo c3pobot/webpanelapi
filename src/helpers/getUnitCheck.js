@@ -1,6 +1,7 @@
 'use strict'
 const log = require('logger')
-module.exports = async(roster)=>{
+
+module.exports = (roster = [])=>{
   try{
     let returnUnit, tempRoster
     if(roster.filter(x=>x.equippedStatMod.length == 0).length > 0) tempRoster = roster.filter(x=>x.equippedStatMod.length == 0)

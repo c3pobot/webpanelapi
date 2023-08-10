@@ -1,5 +1,7 @@
 'use strict'
 const log = require('logger')
+const redis = require('redisclient')
+
 module.exports = async(obj = {}, dId)=>{
   try{
     let res = {msg: {openAlert: true, type: 'error', msg: 'Error getting data'}}

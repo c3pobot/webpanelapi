@@ -1,5 +1,8 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
+const { CleanAllyCodes } = require('helpers')
+
 module.exports = async(obj = {}, discordId)=>{
   try{
     let allyCode, dObj, res = {msg: {openAlert: true, type: 'error', msg: 'Error removing allyCode'}}, allyObj
@@ -15,7 +18,7 @@ module.exports = async(obj = {}, discordId)=>{
         mongo.del('facebook', {_id: allyObj.uId})
         mongo.del('identity', {_id: allyObj.uId})
         await mongo.unset('discordId', {_id: discordId, 'allyCodes.allyCode': allyObj.allyCode}, {'allyCodes.$.uId': allyObj.uId, 'allyCodes.$.type': allyObj.type})
-        await HP.CleanAllyCodes(dObj.allyCodes)
+        await CleanAllyCodes(dObj.allyCodes)
         for(let i in dObj.allyCodes){
           if(dObj.allyCodes[i].allyCode.toString() === allyCode.toString()){
             delete dObj.allyCodes[i].type

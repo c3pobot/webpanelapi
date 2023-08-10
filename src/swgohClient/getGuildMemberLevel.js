@@ -2,8 +2,10 @@
 const mongo = require('mongoclient')
 const swgohClient = require('swgohClient')
 
-module.exports = async({ allyCode, playerId })=>{
+module.exports = async({ allyCode, playerId }, dId)=>{
   try{
+    let dObj = (await mongo.find('discordId', {_id: dId}))[0]
+    if(!dObj) return {msg: {openAlert: true, type: 'error', msg: 'You did not provide an allyCode'}}
     let res = 0, guildId, pObj, guild, pId = playerId
     if(!pId){
       pObj = (await mongo.find('playerCache', {allyCode: allyCode}))[0]

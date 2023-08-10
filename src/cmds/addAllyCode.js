@@ -1,5 +1,8 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
+const swgohClient = require('swgohClient')
+const { GetUnitCheck, VerifyUnit } = require('helpers')
 module.exports = async(obj = {}, discordId)=>{
   try{
     let dObj, res = {msg: {openAlert: true, type: 'error', msg: 'You did not provide an allyCode'}}, usr, allyCode, pObj, exists
@@ -12,7 +15,7 @@ module.exports = async(obj = {}, discordId)=>{
         res.msg.msg = allyCode+' is already linked to your account'
       }else{
         res.msg.msg = allyCode+' is not a valid allyCode'
-        pObj = await Client.post('playerArena', {
+        pObj = await swgohClient('playerArena', {
             allyCode: allyCode.toString(),
             playerDetailsOnly: true
           })
@@ -32,7 +35,7 @@ module.exports = async(obj = {}, discordId)=>{
       res.msg = {openAlert: true, type: 'success', msg: allyCode+' was added'}
     }
     if(exists){
-      const auth = await HP.VerifyUnit(pObj.playerId, pObj.rosterUnit.filter(x=>x.relic && x.currentLevel > 50))
+      let auth = await VerifyUnit(pObj.playerId, pObj.rosterUnit.filter(x=>x.relic && x.currentLevel > 50))
       if(auth == 2){
         await mongo.pull('discordId', {'allyCodes.allyCode': allyCode}, {allyCodes:{allyCode: allyCode}})
         await mongo.del('acVerify', {_id: pObj.playerId})
@@ -45,11 +48,11 @@ module.exports = async(obj = {}, discordId)=>{
         res.allyCodes = dObj.allyCodes
         res.msg = allyCode+' was added'
       }else{
-        const unit = await HP.GetUnitCheck(pObj.rosterUnit.filter(x=>x.relic && x.currentLevel > 50))
+        let unit = await GetUnitCheck(pObj.rosterUnit.filter(x=>x.relic && x.currentLevel > 50))
         if(unit){
-          const baseId = unit.definitionId.split(':')[0]
-          const uInfo = await redis.get('un-'+baseId)
-          const tempObj = {
+          let baseId = unit.definitionId.split(':')[0]
+          let uInfo = await redis.get('un-'+baseId)
+          let tempObj = {
             defId: unit.definitionId,
             mods: unit.equippedStatMod,
             verify: 'add'

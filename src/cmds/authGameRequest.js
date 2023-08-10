@@ -1,9 +1,14 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
+const redis = require('redisclient')
+const swgohClient = require('swgohClient')
+const { DecryptId } = require('helpers')
+
 module.exports = async(obj ={}, dId)=>{
   try{
     let dObj, res = {alert: {type: 'error', msg: 'Your session expired'}}, identity, pObj, sessionId, data, sObj
-    if(obj.sessionId) sessionId = await HP.DecryptId(obj.sessionId)
+    if(obj.sessionId) sessionId = await DecryptId(obj.sessionId)
     if(sessionId){
       res.alert.msg = ''
       sObj = await redis.get(sessionId)
@@ -13,7 +18,7 @@ module.exports = async(obj ={}, dId)=>{
     log.info(pObj?.player?.allyCode)
     log.info(obj.allyCode)
     if(pObj?.player?.allyCode?.toString() === obj.allyCode.toString() && identity?.auth?.authToken){
-      data = await Client.post(obj.method, obj.payload, identity)
+      data = await swgohClient(obj.method, obj.payload, identity)
       log.info(data)
     }
     if(data && data?.code !== 5){

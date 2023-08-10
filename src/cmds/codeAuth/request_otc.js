@@ -1,11 +1,13 @@
 'use strict'
 const log = require('logger')
 const postRequest = require('./request')
+const redis = require('redisclient')
+
 module.exports = async(obj={}, dId)=>{
   try{
     let tempObj = { status: 'error'}
     if(obj?.payload?.email && obj.allyCode){
-      const res = await postRequest('/auth/request_otc', obj.payload, {})
+      let res = await postRequest('auth/request_otc', obj.payload, {})
       if(res?.authId && res.authToken){
         res.email = obj.payload.email
         res.allyCode = obj.allyCode
@@ -16,6 +18,6 @@ module.exports = async(obj={}, dId)=>{
     }
     return tempObj
   }catch(e){
-    log.error(e);
+    throw(e);
   }
 }

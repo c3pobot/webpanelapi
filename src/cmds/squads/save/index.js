@@ -1,16 +1,22 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
+const botRequest = require('botrequest')
+
 const CheckGuildAdmin = async(obj = {}, dId)=>{
   try{
-    let guild, server, usr, auth = 0
+    let guild, server, usr, auth = false
     if(dId && obj?.id){
       guild = (await mongo.find('guilds', {_id: obj.id}, {sId: 1}))[0]
-      if(guild && guild.sId){
+      if(guild?.sId){
         server = (await mongo.find('discordServer', {_id: guild.sId}, {admin: 1}))[0]
-        usr = await MSG.GetGuildMember(guild.sId, dId)
+        usr = await botRequest('getGuildMember', { sId: guild.sId, dId: dId })
       }
     }
-    if(server?.admin?.some(x=> usr?.roles.includes(x.id))) auth++;
+    let userRoles = usr?.roles.map(x=>x.id)
+    if(userRoles?.length > 0){
+      if(server?.admin?.some(x=> userRoles.includes(x.id))) auth = true
+    }
     return auth
   }catch(e){
     log.error(e);
@@ -20,12 +26,15 @@ const CheckServerAdmin = async(obj = {}, dId)=>{
   try{
     let server, usr, auth = 0, guild
     if(dId && obj?.id){
-      guild = await MSG.GetGuild(obj.id)
+      guild = await botRequest('getGuild', {sId: obj.id})
       server = (await mongo.find('discordServer', {_id: obj.id}, {admin: 1}))[0]
-      usr = await MSG.GetGuildMember(obj.id, dId)
-      if(dId == guild?.owner_id) auth++;
+      usr = await botRequest('getGuildMember', { sId: obj.sId, dId: dId })
+      if(dId === guild?.owner_id) auth = true;
     }
-    if(server?.admin?.some(x=> usr?.roles?.includes(x.id))) auth++;
+    let userRoles = usr?.roles.map(x=>x.id)
+    if(userRoles?.length > 0){
+      if(server?.admin?.some(x=> userRoles.includes(x.id))) auth = true
+    }
     return auth
   }catch(e){
     log.error(e);
@@ -33,16 +42,14 @@ const CheckServerAdmin = async(obj = {}, dId)=>{
 }
 const CheckGlobalAdmin = async(obj = {}, dId)=>{
   try{
-    let auth = 0
-    if(dId === process.env.BOT_OWNER_ID) auth++;
-    return auth
+    if(dId === process.env.BOT_OWNER_ID) return true
   }catch(e){
     log.error(e);
   }
 }
 const CheckAdmin = async(obj = {}, dId)=>{
   if(obj.type === 'guild') return await CheckGuildAdmin(obj, dId)
-  if(obj.type === 'player') return 1
+  if(obj.type === 'player') return true
   if(obj.type === 'server') return await CheckServerAdmin(obj, dId)
   if(obj.type === 'global') return await CheckGlobalAdmin(obj, dId)
 }

@@ -1,6 +1,12 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
+const redis = require('redisclient')
 const { v4: uuidv4 } = require('uuid')
+
+const { EncryptId } = require('helpers')
+
+
 module.exports = async(obj={}, dId)=>{
   try{
     let dObj, res = {alert: {type: 'error', msg: 'you do not have Google/Guest auth set up for allyCode '+obj.allyCode}}, sessionId
@@ -11,7 +17,7 @@ module.exports = async(obj={}, dId)=>{
       sessionId = await uuidv4();
     }
     if(sessionId){
-      res.sessionId = await HP.EncryptId(sessionId)
+      res.sessionId = await EncryptId(sessionId)
     }
     if(res.sessionId){
       const saveStatus = await redis.setTTL(obj.allyCode+'-mods', {id: sessionId}, 600)

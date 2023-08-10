@@ -1,5 +1,7 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
+
 const GetGuildId = require('./getGuildId')
 module.exports = async(obj = {}, dId)=>{
   try{

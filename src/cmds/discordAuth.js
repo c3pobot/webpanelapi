@@ -1,8 +1,11 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
 const path = require('path')
-const got = require('src/helpers/got')
+const got = require('helpers/got')
 const { URLSearchParams } = require('url');
+
+const { CleanAllyCodes, EncryptId } = require('helpers')
 
 const GetNewIdentity = async(code, redirect_uri)=>{
 	try{
@@ -40,7 +43,7 @@ module.exports = async(obj = {})=>{
 		let res = {}, encryptedId, allyCode, webProfile = {theme: 'dark', rememberMe: true}
 		let dObj = (await mongo.find('discordId', {_id: identity.id}))[0]
 		if(!dObj) return({msg: { type: 'error', msg: 'Your discord account is not linked to the bot'}})
-		if(dObj) encryptedId = HP.EncryptId(identity.id)
+		if(dObj) encryptedId = EncryptId(identity.id)
 		if(!encryptedId) return
 		res.data = {}
 		res.encryptedId = encryptedId
@@ -51,7 +54,7 @@ module.exports = async(obj = {})=>{
 		if(identity.locale) webProfile.locale = identity.locale
 		res.data.webProfile = webProfile
 		if(dObj && dObj.allyCodes && dObj.allyCodes.length > 0){
-			await HP.CleanAllyCodes(dObj.allyCodes)
+			await CleanAllyCodes(dObj.allyCodes)
 			res.data.allyCodes = dObj.allyCodes
 		}
 		await mongo.set('discordId', {_id: identity.id}, {webProfile: webProfile})

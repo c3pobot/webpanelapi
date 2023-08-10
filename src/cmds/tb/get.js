@@ -1,5 +1,7 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
+
 module.exports = async(obj={}, dId)=>{
   try{
     if(obj.guildId && obj.collection?.startsWith('tb') && obj.tbId){

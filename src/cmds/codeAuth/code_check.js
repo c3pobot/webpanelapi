@@ -1,7 +1,15 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
+const redis = require('redisclient')
+
 const { v5: uuidv5 } = require('uuid')
+
+const swgohClient = require('swgohClient')
 const postRequest = require('./request')
+
+const { Encrypt } = require('googleToken')
+
 const CreateUUid = async(authId)=>{
   try{
     return await uuidv5(authId, uuidv5.URL)
@@ -25,7 +33,7 @@ module.exports = async(obj = {}, dId)=>{
       if(!cacheObj) res.status = 'nocache'
     }
     if(cacheObj?.authId && cacheObj?.authToken){
-      tempAuth = await postRequest('/auth/code_check', {
+      tempAuth = await postRequest('auth/code_check', {
         code: obj.code.toString(),
         email: cacheObj.email,
         rememberMe: true
@@ -44,11 +52,11 @@ module.exports = async(obj = {}, dId)=>{
       androidId: tempAuth.deviceId,
       platform: 'Android'
     }
-    if(identity?.auth) pObj = await Client.post('getInitialData', {}, identity)
+    if(identity?.auth) pObj = await swgohClient('getInitialData', {}, identity)
     if(pObj?.player?.allyCode){
       res.status = 'allyCodeNoMatch'
       if(pObj?.player?.allyCode?.toString() === obj.allyCode.toString()){
-        const encryptedToken = await Client.Google.Encrypt(tempAuth.refreshToken)
+        let encryptedToken = await Encrypt(tempAuth.refreshToken)
         if(encryptedToken){
           res.status = 'success'
           await mongo.set('identity', {_id: identity.deviceId}, identity)

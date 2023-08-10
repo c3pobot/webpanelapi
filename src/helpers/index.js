@@ -1,12 +1,17 @@
 'use strict'
-const swgohhelper = require('swgohhelper')
-const Cmds = swgohhelper
-Cmds.EncryptId = require('./encryptId')
+const Cmds = {}
 Cmds.CleanAllyCodes = require('./cleanAllyCodes')
+
 Cmds.DecryptId = require('./decryptId')
+
+Cmds.EncryptId = require('./encryptId')
+
 Cmds.GetBotGuilds = require('./getBotGuilds')
+Cmds.GetGuildMemberLevel = require('./getGuildMemberLevel')
 Cmds.GetMemberGuilds = require('./getMemberGuilds')
 Cmds.GetUnitCheck = require('./getUnitCheck')
+
 Cmds.VerifyUnit = require('./verifyUnit')
+
 Cmds.updateUnitImage = require('./updateUnitImage')
 module.exports = Cmds
