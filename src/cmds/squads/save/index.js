@@ -28,7 +28,7 @@ const CheckServerAdmin = async(obj = {}, dId)=>{
     if(dId && obj?.id){
       guild = await botRequest('getGuild', {sId: obj.id})
       server = (await mongo.find('discordServer', {_id: obj.id}, {admin: 1}))[0]
-      usr = await botRequest('getGuildMember', { sId: obj.sId, dId: dId })
+      usr = await botRequest('getGuildMember', { sId: obj.id, dId: dId })
       if(dId === guild?.owner_id) auth = true;
     }
     let userRoles = usr?.roles.map(x=>x.id)

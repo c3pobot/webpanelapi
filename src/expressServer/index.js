@@ -52,7 +52,7 @@ const handelRequest = async(req, res)=>{
     if(req?.body?.data) data = req.body.data
     let discordId = DecryptId(req?.body?.dId)
     if(req?.body?.method){
-      response = {message: 'Unknown Coomand : '+req.body.method}
+      response = {message: 'Unknown Comand : '+req.body.method}
       if(Cmds[req.body.method]){
         status = 200
         response = await Cmds[req.body.method](data, discordId)
