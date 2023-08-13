@@ -4,7 +4,6 @@ const path = require('path');
 const express = require('express')
 const bodyParser = require('body-parser');
 const compression = require('compression');
-const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const PORT = process.env.PORT || 3000
 const Cmds = require('../cmds')
@@ -12,13 +11,7 @@ const Cmds = require('../cmds')
 const { DecryptId } = require('helpers')
 
 const app = express()
-const ASSET_URL = process.env.ASSET_URL
-let imgProxy
-if(ASSET_URL) imgProxy = createProxyMiddleware({
-  target: ASSET_URL,
-  secure: false,
-  logLevel: 'debug'
-})
+
 app.use(bodyParser.json({
   limit: '1000MB',
   verify: (req, res, buf)=>{
@@ -28,11 +21,7 @@ app.use(bodyParser.json({
 app.use(compression())
 
 app.use(express.json({limit: '100MB'}));
-if(imgProxy){
-  app.use('/asset', imgProxy)
-  app.use('/portrait', imgProxy)
-  app.use('/thumbnail', imgProxy)
-}
+
 app.get('/healthz', (req, res)=>{
   res.json({status: 'health check success'}).status(200)
 })
