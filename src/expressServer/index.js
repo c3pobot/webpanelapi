@@ -6,18 +6,18 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
-const S3_PUBLIC_URL = process.env.S3_PUBLIC_URL
 const PORT = process.env.PORT || 3000
 const Cmds = require('../cmds')
 
 const { DecryptId } = require('helpers')
 
 const app = express()
+const ASSET_URL = process.env.ASSET_URL
 let imgProxy
-
-if(S3_PUBLIC_URL) imgProxy = createProxyMiddleware({
-  target: S3_PUBLIC_URL,
-  secure: false
+if(ASSET_URL) imgProxy = createProxyMiddleware({
+  target: ASSET_URL,
+  secure: false,
+  logLevel: 'debug'
 })
 app.use(bodyParser.json({
   limit: '1000MB',
@@ -26,20 +26,19 @@ app.use(bodyParser.json({
   }
 }))
 app.use(compression())
-if(imgProxy) app.use('/thumbnail', imgProxy)
-app.use(express.json({limit: '100MB'}))
-app.use(express.static(path.join(__dirname, 'webapp')));
 
+app.use(express.json({limit: '100MB'}));
+if(imgProxy){
+  app.use('/asset', imgProxy)
+  app.use('/portrait', imgProxy)
+  app.use('/thumbnail', imgProxy)
+}
 app.get('/healthz', (req, res)=>{
   res.json({status: 'health check success'}).status(200)
 })
 
 app.post('/api', (req, res)=>{
   handelRequest(req, res)
-})
-
-app.get('/*', (req, res)=>{
-  res.sendFile(path.join(__dirname, 'webapp', 'index.html'));
 })
 
 const server = app.listen(PORT, ()=>{
