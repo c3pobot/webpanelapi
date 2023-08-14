@@ -27,6 +27,7 @@
     "express": "^4.17.2",
     "googletokenwrapper": "github:c3pobot/googletokenwrapper",
     "got": "^11.8.6",
+    "http-proxy-middleware": "^2.0.6",
     "logger": "github:c3pobot/logger",
     "mongoclient": "github:c3pobot/mongoclient",
     "node-fetch": "^2.6.12",

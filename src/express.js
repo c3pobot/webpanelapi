@@ -4,9 +4,16 @@ const path = require('path');
 const express = require('express')
 const bodyParser = require('body-parser');
 const compression = require('compression');
+const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const PORT = process.env.PORT || 3000
 const Cmds = require('./cmds')
+
+let webProxy
+if(process.env.WEB_SVC_URI) webProxy = createProxyMiddleware({
+  target: process.env.WEB_SVC_URI,
+  secure: false
+})
 
 const { DecryptId } = require('./helpers')
 
@@ -29,7 +36,7 @@ app.get('/healthz', (req, res)=>{
 app.post('/api', (req, res)=>{
   handelRequest(req, res)
 })
-
+if(webProxy) app.use('/*', webProxy)
 const server = app.listen(PORT, ()=>{
   log.info(`WebApi is listening on ${server.address().port}`)
 })
