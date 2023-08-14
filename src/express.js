@@ -9,12 +9,15 @@ const { createProxyMiddleware } = require('http-proxy-middleware')
 const PORT = process.env.PORT || 3000
 const Cmds = require('./cmds')
 
-let webProxy
+let webProxy, assetProxy
 if(process.env.WEB_SVC_URI) webProxy = createProxyMiddleware({
   target: process.env.WEB_SVC_URI,
   secure: false
 })
-
+if(process.env.ASSET_SVC_URI) assetProxy = createProxyMiddleware({
+  target: process.env.ASSET_SVC_URI,
+  secure: false
+})
 const { DecryptId } = require('./helpers')
 
 const app = express()
@@ -36,6 +39,11 @@ app.get('/healthz', (req, res)=>{
 app.post('/api', (req, res)=>{
   handelRequest(req, res)
 })
+if(assetProxy){
+  app.use('/asset', assetProxy)
+  app.use('/portrait', assetProxy)
+  app.use('/thumbnail', assetProxy)
+}
 if(webProxy) app.use('/*', webProxy)
 const server = app.listen(PORT, ()=>{
   log.info(`WebApi is listening on ${server.address().port}`)
