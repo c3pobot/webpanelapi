@@ -6,9 +6,9 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 
 const PORT = process.env.PORT || 3000
-const Cmds = require('../cmds')
+const Cmds = require('./cmds')
 
-const { DecryptId } = require('helpers')
+const { DecryptId } = require('./helpers')
 
 const app = express()
 
