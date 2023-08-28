@@ -1,5 +1,5 @@
 'use strict'
-const fetch = ('node-fetch')
+const fetch = require('node-fetch')
 const path = require('path')
 const baseStoreUrl = 'https://store.galaxy-of-heroes.starwars.ea.com'
 
