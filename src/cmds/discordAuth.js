@@ -40,20 +40,22 @@ module.exports = async(obj = {})=>{
 		if(!obj.code) return
 		let identity = await GetNewIdentity(obj.code, obj.redirect_uri)
 		if(!identity) return
-		let res = {}, encryptedId, allyCode, webProfile = {theme: 'dark', rememberMe: true}
+		let res = {}, allyCode, webProfile = {theme: 'dark', rememberMe: true}
 		let dObj = (await mongo.find('discordId', {_id: identity.id}))[0]
-		if(!dObj) return({msg: { type: 'error', msg: 'Your discord account is not linked to the bot'}})
-		if(dObj) encryptedId = EncryptId(identity.id)
+
+		//if(!dObj) return({msg: { type: 'error', msg: 'Your discord account is not linked to the bot'}})
+		//if(dObj) encryptedId = EncryptId(identity.id)
+		let encryptedId = EncryptId(identity.id)
 		if(!encryptedId) return
 		res.data = {}
 		res.encryptedId = encryptedId
-		if(dObj.webProfile) webProfile = dObj.webProfile
+		if(dObj?.webProfile) webProfile = dObj.webProfile
 		if(identity.name) webProfile.name = identity.name
 		if(identity.avatar) webProfile.avatar = 'https://cdn.discordapp.com/avatars/'+identity.id+'/'+identity.avatar+(identity.avatar.startsWith('a_') ? '.gif':'.png')
 		if(identity.banner) webProfile.banner = 'https://cdn.discordapp.com/banners/'+identity.id+'/'+identity.banner+(identity.banner.startsWith('a_') ? '.gif':'.png')
 		if(identity.locale) webProfile.locale = identity.locale
 		res.data.webProfile = webProfile
-		if(dObj && dObj.allyCodes && dObj.allyCodes.length > 0){
+		if(dObj?.allyCodes?.length > 0){
 			await CleanAllyCodes(dObj.allyCodes)
 			res.data.allyCodes = dObj.allyCodes
 		}

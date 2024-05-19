@@ -8,16 +8,16 @@ module.exports = async(obj = {}, discordId)=>{
     let dObj, res = {msg: {openAlert: true, type: 'error', msg: 'You did not provide an allyCode'}}, usr, allyCode, pObj, exists
     if(obj.allyCode) allyCode = +(obj.allyCode.toString().trim().replace(/-/g, ''))
     if(discordId) dObj = (await mongo.find('discordId', {_id: discordId}))[0]
-    if(!dObj) res.msg.msg = 'You are required to link to the bot thru discord first'
-    if(dObj && allyCode){
+    //if(!dObj) res.msg.msg = 'You are required to link to the bot thru discord first'
+    if(!dObj?.allyCodes) dObj.allyCodes = []
+    if(dObj?.allyCodes && allyCode){
       if(!dObj.allyCodes) dObj.allyCodes = []
       if(dObj.allyCodes.filter(x=>x.allyCode == allyCode).length > 0){
         res.msg.msg = allyCode+' is already linked to your account'
       }else{
         res.msg.msg = allyCode+' is not a valid allyCode'
-        pObj = await swgohClient('playerArena', {
-            allyCode: allyCode.toString(),
-            playerDetailsOnly: true
+        pObj = await swgohClient('player', {
+            allyCode: allyCode.toString()
           })
       }
     }
@@ -46,12 +46,12 @@ module.exports = async(obj = {}, discordId)=>{
           delete dObj.allyCodes[i].playerId
         }
         res.allyCodes = dObj.allyCodes
-        res.msg = allyCode+' was added'
+        res.msg = {openAlert: true, type: 'success', msg: allyCode+' was added'}
       }else{
         let unit = await GetUnitCheck(pObj.rosterUnit.filter(x=>x.relic && x.currentLevel > 50))
         if(unit){
           let baseId = unit.definitionId.split(':')[0]
-          let uInfo = await redis.get('un-'+baseId)
+          let uInfo = (await mongo.find('units', {_id: baseId}, {nameKey: 1}))[0]
           let tempObj = {
             defId: unit.definitionId,
             mods: unit.equippedStatMod,
@@ -59,12 +59,18 @@ module.exports = async(obj = {}, discordId)=>{
           }
           if(tempObj.mods.length > 0) tempObj.verify = 'remove'
           await mongo.set('acVerify', {_id: pObj.playerId}, tempObj)
-          res.msg.msg = 'allyCode **'+allyCode+'** for player **'+pObj.name+'** is already linked to another discordId.'
-          res.verify = []
+          res.msg = {openAlert: true, type: 'error', msg: allyCode+' linked to another discordId'}
+          //res.msg.msg = 'allyCode **'+allyCode+'** for player **'+pObj.name+'** is already linked to another discordId.'
+          res.verify = 'allyCode **'+allyCode+'** for player **'+pObj.name+'** is already linked to another discordId.\n\n'
+          res.verify += 'You can verify you have access to this account by **'+tempObj.verify+'ing** a square and a diamond mod '+(tempObj.verify == 'add' ? 'to':'from')+' **'+(uInfo ? uInfo.nameKey:baseId)+'**'
+          res.verify += ' and then running  this command again.'
+          res.verify += '\n**Note: This verification expires in ~5 minutes**'
+          /*
           res.verify.push({msg: res.msg, id: 1})
           res.verify.push({msg: 'You can verify you have access to this account by **'+tempObj.verify+'ing** a square and a diamond mod '+(tempObj.verify == 'add' ? 'to':'from')+' **'+(uInfo ? uInfo.nameKey:baseId)+'**', id: 2})
           res.verify.push({msg: ' and then running  this command again.', id: 3})
           res.verify.push({msg: '**Note: This verification expires in ~5 minutes**', id: 4})
+          */
         }
       }
     }
