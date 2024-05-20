@@ -12,7 +12,7 @@ const GetNewIdentity = async(code, redirect_uri)=>{
 		let tokens = await GetTokenByCode(code)
 	  if(!tokens || !tokens?.token_type || !tokens?.access_token) return
 	  let opts = { method: 'GET', headers: {'Authorization': `${tokens.token_type} ${tokens.access_token}`}, compress: true, timeout: 30000 }
-    let res = await got('https://discord.com/api/users/@me', opts)
+    let res = await fetch('https://discord.com/api/users/@me', opts)
 		if (res?.headers?.get('Content-Type')?.includes('application/json')) return await res.json()
   }catch(e){
     log.error(e)
@@ -31,6 +31,7 @@ const GetTokenByCode = async(code, redirect_uri)=>{
     let data = new URLSearchParams(body)
 		let opts = { headers: {'Content-Type': 'application/x-www-form-urlencoded'}, method: 'POST', compress: true, timeout: 30000, body: data.toString() }
 	  let res = await fetch('https://discord.com/api/oauth2/token', opts)
+
 		if (res?.headers?.get('Content-Type')?.includes('application/json')) return await res.json()
   }catch(e){
 		log.error(e)

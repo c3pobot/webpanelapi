@@ -1,5 +1,6 @@
 'use strict'
 const log = require('logger')
+const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
 
 module.exports = async(obj = {}, dId)=>{

@@ -3,16 +3,15 @@ const log = require('logger')
 const mongo = require('mongoclient')
 const { GetMemberGuilds } = require('src/helpers')
 const swgohClient = require('src/swgohClient')
-const BOT_OWNER_ID = process.env.BOT_OWNER_ID
+let BOT_OWNER_ID = process.env.BOT_OWNER_ID
 
 module.exports = async(obj = {}, discordId)=>{
   try{
-    
+
     if(!discordId) return { status: { openAlert: true, type:'error', msg: 'Error getting data from the bot' } }
 
     let dObj = (await mongo.find('discordId', {_id: discordId}))[0]
     if(!dObj?.allyCodes || dObj.allyCodes?.length == 0) return { status: { openAlert: true, type:'error', msg: 'Error getting data from the bot' } }
-
     if(discordId !== BOT_OWNER_ID){
       let cached = (await mongo.find('webPanelCache', {_id: discordId}))[0]
       if(cached?.updated && !obj.forced){

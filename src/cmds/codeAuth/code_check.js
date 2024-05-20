@@ -52,7 +52,7 @@ module.exports = async(obj = {}, dId)=>{
     if(pObj?.player?.allyCode?.toString() === obj.allyCode.toString()){
       let encryptedToken = await Encrypt(tempAuth.refreshToken)
       if(encryptedToken){
-        res.status = 'success'
+        res.status = 'success', res.playerName = pObj.player.name
         await mongo.set('identity', {_id: identity.deviceId}, identity)
         await mongo.set('tokens', {_id: identity.deviceId}, {refreshToken: encryptedToken})
         await mongo.set('discordId', {_id: dId, 'allyCodes.allyCode': +obj.allyCode}, {'allyCodes.$.uId': tempAuth.deviceId, 'allyCodes.$.type': 'codeAuth'})

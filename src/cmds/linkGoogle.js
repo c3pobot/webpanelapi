@@ -10,7 +10,7 @@ module.exports = async(obj = {}, discordId)=>{
     let dObj = (await mongo.find('discordId', {_id: discordId}))[0]
     if(!dObj?.allyCodes || dObj?.allyCodes?.length == 0) return { status: 'errorOccured' }
 
-    if(dObj.allyCodes.filter(x=>x.allyCode == +allyCode).length == 0) return { status: 'errorOccured' }
+    if(dObj.allyCodes.filter(x=>x.allyCode == +obj.allyCode).length == 0) return { status: 'errorOccured' }
 
     let tokens = await NewToken(obj.code)
     if(!tokens?.accessToken || !tokens?.uid) return { status: 'errorOccured' }
@@ -23,8 +23,8 @@ module.exports = async(obj = {}, discordId)=>{
     let pObj = await swgohClient('getInitialData', {}, identity)
     if(!pObj?.player?.allyCode) return { status: 'errorOccured' }
 
-    if(!pObj?.player?.allyCode?.toString() !== obj?.allyCode?.toString()){
-      log.error(`Requested: ${allyCode} From Game: ${pObj?.player?.allyCode}`)
+    if(pObj?.player?.allyCode?.toString() !== obj?.allyCode?.toString()){
+      log.error(`Requested: ${obj.allyCode} From Game: ${pObj?.player?.allyCode}`)
       return { status: 'allyCodeNoMatch' }
     }
 
