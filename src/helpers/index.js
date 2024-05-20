@@ -13,5 +13,4 @@ Cmds.GetUnitCheck = require('./getUnitCheck')
 
 Cmds.VerifyUnit = require('./verifyUnit')
 
-Cmds.updateUnitImage = require('./updateUnitImage')
 module.exports = Cmds

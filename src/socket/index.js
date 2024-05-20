@@ -3,7 +3,7 @@ const log = require('logger')
 const { Server } = require('socket.io')
 
 const Cmds = require('./cmds')
-const { DecryptId } = require('helpers')
+const { DecryptId } = require('src/helpers')
 
 module.exports = async(server)=>{
   try{

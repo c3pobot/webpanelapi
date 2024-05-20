@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "update": "chmod a+x updategitdependency.sh && ./updategitdependency.sh",
-    "build": "chmod a+x buildtestimage.sh && ./buildtestimage.sh c3pobot-old/webpanelapi",
-    "prod": "chmod a+x buildprodimage.sh && ./buildprodimage.sh c3pobot-old/webpanelapi"
+    "build": "chmod a+x buildtestimage.sh && ./buildtestimage.sh c3pobot/webpanelapi",
+    "prod": "chmod a+x buildprodimage.sh && ./buildprodimage.sh c3pobot/webpanelapi"
   },
   "repository": {
     "type": "git",
@@ -21,19 +21,15 @@
   "homepage": "https://gitlab.com/c3po-shard/weblinksocket#readme",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "botrequest": "github:c3pobot/botrequest",
     "compression": "^1.7.4",
     "crypto-js": "^4.1.1",
     "express": "^4.17.2",
-    "googletokenwrapper": "github:c3pobot/googletokenwrapper",
-    "got": "^11.8.6",
-    "http-proxy-middleware": "^2.0.6",
+    "google-auth-library": "^9.10.0",
     "logger": "github:c3pobot/logger",
     "mongoclient": "github:c3pobot/mongoclient",
     "node-fetch": "^2.6.12",
-    "redisclient": "github:c3pobot/redisclient",
+    "rabbitmq-client": "^4.6.0",
     "socket.io": "^4.5.4",
-    "url": "^0.11.1",
     "uuid": "^8.3.2"
   }
 }

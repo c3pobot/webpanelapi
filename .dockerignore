@@ -1,8 +1,13 @@
 .git
 .gitignore
-data
-node_modules
 .env
-.env-example
 Dockerfile
+Dockerfile.dev
+node_modules
+data
+cache
+docker-compose.yaml
 .testregistry
+buildprodimage.sh
+buildtestimage.sh
+updategitdependency.sh

@@ -1,22 +1,8 @@
 'use strict'
 const log = require('logger')
-const redis = require('redisclient')
 const mongo = require('mongoclient')
 const swgohClient = require('./swgohClient')
-
-const CheckRedis = async()=>{
-  try{
-    let status = redis.status()
-    if(status){
-      CheckMongo()
-      return
-    }
-    setTimeout(CheckRedis, 5000)
-  }catch(e){
-    log.error(e);
-    setTimeout(CheckRedis, 5000)
-  }
-}
+require('./exchanges')
 const CheckMongo = async()=>{
   try{
     let status = mongo.status()
@@ -32,8 +18,8 @@ const CheckMongo = async()=>{
 }
 const CheckApiReady = async()=>{
   try{
-    let status = await swgohClient.status()
-    if(status){
+    let obj = await swgohClient('metadata')
+    if(obj?.latestGamedataVersion){
       StartServices()
       return
     }
@@ -44,11 +30,6 @@ const CheckApiReady = async()=>{
   }
 }
 const StartServices = async()=>{
-  try{
-    require('./express')
-  }catch(e){
-    log.error(e);
-    setTimeout(StartServices, 5000)
-  }
+  require('./express')
 }
-CheckRedis()
+CheckMongo()

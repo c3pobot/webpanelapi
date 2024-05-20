@@ -1,7 +1,7 @@
 'use strict'
 const log = require('logger')
 const mongo = require('mongoclient')
-const { CleanAllyCodes } = require('helpers')
+const { CleanAllyCodes } = require('src/helpers')
 
 module.exports = async(obj = {}, discordId)=>{
   try{

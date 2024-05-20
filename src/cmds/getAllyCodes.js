@@ -1,17 +1,14 @@
 'use strict'
 const log = require('logger')
 const mongo = require('mongoclient')
-const { CleanAllyCodes } = require('helpers')
+const { CleanAllyCodes } = require('src/helpers')
 
 module.exports = async(obj = {}, discordId)=>{
   try{
-    let res = []
-    const dObj = (await mongo.find('discordId',{_id: discordId}))[0]
-    if(dObj?.allyCodes){
-      await CleanAllyCodes(dObj.allyCodes)
-      res = dObj.allyCodes
-    }
-    return res
+    let dObj = (await mongo.find('discordId',{_id: discordId}))[0]
+    if(!dObj?.allyCodes || dObj?.allyCodes?.length == 0) return []
+    await CleanAllyCodes(dObj.allyCodes)
+    return dObj.allyCodes
   }catch(e){
     log.error(e);
     return []

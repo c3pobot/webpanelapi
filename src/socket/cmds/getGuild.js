@@ -1,7 +1,7 @@
 'use strict'
 const log = require('logger')
 const mongo = require('mongoclient')
-const swgohClient = require('swgohClient')
+const swgohClient = require('src/swgohClient')
 const QueryGuild = async(guildId)=>{
   try{
     let guild = (await mongo.find('guildCache', {_id: guildId}))[0]

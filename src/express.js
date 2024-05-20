@@ -4,20 +4,10 @@ const path = require('path');
 const express = require('express')
 const bodyParser = require('body-parser');
 const compression = require('compression');
-const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const PORT = process.env.PORT || 3000
 const Cmds = require('./cmds')
 
-let webProxy, assetProxy
-if(process.env.WEB_SVC_URI) webProxy = createProxyMiddleware({
-  target: process.env.WEB_SVC_URI,
-  secure: false
-})
-if(process.env.ASSET_SVC_URI) assetProxy = createProxyMiddleware({
-  target: process.env.ASSET_SVC_URI,
-  secure: false
-})
 const { DecryptId } = require('./helpers')
 
 const app = express()
@@ -30,7 +20,6 @@ app.use(bodyParser.json({
 }))
 app.use(compression())
 
-app.use(express.json({limit: '100MB'}));
 
 app.get('/healthz', (req, res)=>{
   res.json({status: 'health check success'}).status(200)
@@ -39,12 +28,7 @@ app.get('/healthz', (req, res)=>{
 app.post('/api', (req, res)=>{
   handelRequest(req, res)
 })
-if(assetProxy){
-  app.use('/asset', assetProxy)
-  app.use('/portrait', assetProxy)
-  app.use('/thumbnail', assetProxy)
-}
-if(webProxy) app.use('/*', webProxy)
+
 const server = app.listen(PORT, ()=>{
   log.info(`WebApi is listening on ${server.address().port}`)
 })
