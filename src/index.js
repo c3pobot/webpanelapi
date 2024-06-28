@@ -2,7 +2,7 @@
 const log = require('logger')
 const mongo = require('mongoclient')
 const swgohClient = require('./swgohClient')
-require('./exchanges')
+
 const CheckMongo = async()=>{
   try{
     let status = mongo.status()

@@ -13,7 +13,7 @@ module.exports = async({ allyCode, playerId })=>{
   if(pId && !guildId){
     let gObj = (await mongo.find('guildIdCache', { playerId: pId }))[0]
     if(!gObj?.guildId) gObj = await swgohClient('player', { playerId: pId })
-    if(gObj?.guildId) guildId = pObj.guildId
+    if(gObj?.guildId) guildId = gObj.guildId
   }
   if(guildId && pId){
     guild = (await mongo.find('guildCache', {_id: guildId}))[0]
