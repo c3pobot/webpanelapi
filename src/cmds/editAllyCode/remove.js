@@ -14,7 +14,9 @@ module.exports = async(obj = {}, discordId)=>{
     }
     if(allyObj){
       if(allyObj.type == 'google') mongo.del('tokens', {_id: allyObj.uId})
+      if(allyObj.type == 'codeAuth') mongo.del('tokens', {_id: allyObj.uId})
       if(allyObj.type == 'facebook') mongo.del('facebook', {_id: allyObj.uId})
+      if(allyObj.type == 'eaconnect') mongo.del('eaconnectTokens', { _id: allyObj.uId})
       if(allyObj.uId) mongo.del('identity', {_id: allyObj.uId})
       await mongo.pull('discordId', {_id: discordId}, {allyCodes: {allyCode: allyCode}})
       await CleanAllyCodes(dObj.allyCodes)

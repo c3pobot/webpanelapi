@@ -3,6 +3,7 @@ const log = require('logger')
 const mongo = require('mongoclient')
 const swgohClient = require('src/swgohClient')
 const { NewToken, SaveRefreshToken } = require('src/googleToken')
+const { v5: uuidv5 } = require('uuid')
 module.exports = async(obj = {}, discordId)=>{
   try{
 
@@ -29,6 +30,12 @@ module.exports = async(obj = {}, discordId)=>{
     }
 
     await SaveRefreshToken(tokens.uid, tokens.refreshToken)
+    let eaconnectId = uuidv5(authObj.authId, uuidv5.URL)
+    if(eaconnectId){
+      mongo.del('eaconnectTokens', { _id: eaconnectId })
+      mongo.del('tokens', { _id: eaconnectId })
+      mongo.del('identity', { _id: eaconnectId })
+    }
     await mongo.set('identity', { _id: tokens.uid }, identity)
     await mongo.set('discordId', { _id: discordId, 'allyCodes.allyCode': +obj.allyCode }, { 'allyCodes.$.uId': tokens.uid, 'allyCodes.$.type': 'google' })
     let tempObj = (await mongo.find('discordId', { _id: discordId }))[0]
