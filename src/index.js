@@ -1,7 +1,9 @@
 'use strict'
 const log = require('logger')
 const mongo = require('mongoclient')
+const rabbitmq = require('./rabbitmq')
 const swgohClient = require('./swgohClient')
+require('./exchange')
 
 const CheckMongo = async()=>{
   try{
@@ -14,6 +16,21 @@ const CheckMongo = async()=>{
   }catch(e){
     log.error(e);
     setTimeout(CheckMongo, 5000)
+  }
+}
+const CheckRabbitMQ = ()=>{
+  try{
+    if(!rabbitmq?.status) log.debug(`rabbitmq is not ready...`)
+    if(rabbitmq?.status){
+      log.debug(`rabbitmq is ready...`)
+      rabbitmq.notify({ cmd: 'requestNumBotShards' })
+      CheckBot()
+      return
+    }
+    setTimeout(CheckRabbitMQ, 5000)
+  }catch(e){
+    log.error(e)
+    setTimeout(CheckRabbitMQ, 5000)
   }
 }
 const CheckApiReady = async()=>{
