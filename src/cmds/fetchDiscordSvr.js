@@ -27,8 +27,9 @@ module.exports = async(obj = {}, discordId)=>{
     if(discordId == BOT_OWNER_ID) data.botOwner = true
     if(botGuilds?.length > 0){
       for(let i in botGuilds){
-        let tempObj = { id: botGuilds[i].id, name: botGuilds[i].name, owner: (botGuilds[i].ownerID === discordId ? true:false), admin: false }
-        if(botGuilds[i].roles?.length > 0){
+        let tempObj = { id: botGuilds[i].id, name: botGuilds[i].name, owner: (botGuilds[i].ownerID === discordId ? true:false), admin: (botGuilds[i].ownerID === discordId ? true:false) }
+        if(botGuilds[i].roles?.length > 0 && !tempObj.admin){
+
           let guild = (await mongo.find('discordServer', { _id: botGuilds[i].id }, { admin: 1 }))[0]
           if(guild?.admin?.some(x=> botGuilds[i].roles.includes(x.id))) tempObj.admin = true
         }
