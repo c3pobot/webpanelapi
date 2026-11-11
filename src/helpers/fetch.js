@@ -26,11 +26,9 @@ const parseResponse = async(res)=>{
 }
 module.exports = async(uri, opts = {})=>{
   try{
-    log.info(opts)
     let res = await fetch(uri, opts)
     return await parseResponse(res)
   }catch(e){
-
     if(e?.name) return { error: e.name, message: e.message }
     if(e?.status) return await parseResponse(e)
     log.error(e)

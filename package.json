@@ -30,6 +30,7 @@
     "node-fetch": "^2.6.12",
     "rabbitmq-client": "^5.0.2",
     "socket.io": "^4.5.4",
+    "statcalc": "github:c3pobot/statcalc",
     "uuid": "^8.3.2"
   }
 }

@@ -43,7 +43,8 @@ module.exports = async(obj = {})=>{
 	if(!identity) return
 	let res = {}, allyCode, webProfile = {theme: 'dark', rememberMe: true}
 	let dObj = (await mongo.find('discordId', { _id: identity.id }))[0]
-
+	let settings = (await mongo.find('botSettings', { _id: '1' }))[0]
+	res.maxRelic = settings?.maxRelic || 11
 	//if(!dObj) return({msg: { type: 'error', msg: 'Your discord account is not linked to the bot'}})
 	//if(dObj) encryptedId = EncryptId(identity.id)
 	let encryptedId = EncryptId(identity.id)

@@ -3,6 +3,7 @@ const log = require('logger')
 const mongo = require('mongoclient')
 const rabbitmq = require('./rabbitmq')
 const swgohClient = require('./swgohClient')
+const updateGameData = require('./updateGameData')
 require('./exchange')
 
 const CheckMongo = async()=>{
@@ -37,13 +38,27 @@ const CheckApiReady = async()=>{
   try{
     let obj = await swgohClient('metadata')
     if(obj?.latestGamedataVersion){
-      StartServices()
+      CheckGameData(obj?.latestGamedataVersion)
       return
     }
     setTimeout(CheckApiReady, 5000)
   }catch(e){
     log.error(e)
     setTimeout(CheckApiReady, 5000)
+  }
+}
+const CheckGameData = (version)=>{
+  try{
+    let gameVersion = updateGameData()
+    if(gameVersion){
+      log.info('Gamedata ready')
+      StartServices()
+      return
+    }
+    setTimeout(CheckGameData, 5000)
+  }catch(e){
+    log.error(e)
+    setTimeout(CheckGameData, 5000)
   }
 }
 const StartServices = async()=>{
